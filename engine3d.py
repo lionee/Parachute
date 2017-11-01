@@ -12,7 +12,7 @@ class camera:
         self.target = np.array(target)
 
 #
-#   Class is defining shape (mesh). Takes name and vertices count as input
+#   Class is defining shape (mesh). Takes name and vertices count as input.
 #
 class mesh:
     def __init__(self, name, verts_count):
