@@ -1,8 +1,10 @@
 import numpy as np
+
+
 #
 #   Class is defining camera object
 #
-class camera:
+class Camera:
     def __init__(self, position, target):
 
         # Camera position in space
@@ -11,17 +13,13 @@ class camera:
         # Where is camera looking?
         self.target = np.array(target)
 
+
 #
 #   Class is defining shape (mesh). Takes name and vertices count as input.
 #
-class mesh:
+class Mesh:
     def __init__(self, name, verts_count):
         self.name = name
         self.vertices = [np.array([0., 0., 0.])] * verts_count
         self.position = np.array([0., 0., 0.])
         self.rotation = np.array([0., 0., 0.])
-
-
-
-
-
