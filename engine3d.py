@@ -42,13 +42,14 @@ class Camera:
 #   Class is defining shape (mesh). Takes name and vertices count as input.
 #
 class Mesh:
-    def __init__(self, name, verts_count):
+    def __init__(self, name, verts_count, edges):
         self.name = name
         self.vertices = [np.array([0., 0., 0., 0.])] * verts_count
         self.position = np.array([0., 0., 0.])
         self.rotation = np.array([0., 0., 0.])
         # todo: make below simpler!
-        self.edges = np.array([[0, 1],[1, 2],[2, 3],[3, 0],[4,5],[5,6],[6,7],[7,4],[0,4],[1,5],[2,6],[3,7]])
+        self.edges = edges
+
 
 
         print("Mesh created")

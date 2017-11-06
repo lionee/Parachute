@@ -28,9 +28,10 @@ class Game:
 
             # We rotate our cube mesh...
             cube.Rotate(0.01, 0.02)
-
+            plane.Rotate(0.01,0)
             # ... and render it
             cube.Render(self.surface)
+            #plane.Render(self.surface)
             self.screen.blit(self.surface, (0, 0))
             pygame.display.update()
 
@@ -38,8 +39,11 @@ class Game:
 if __name__ == "__main__":
 
     #c = engine3d.Camera([0.0, 0.0, 10.0], [0.0, 0.0, 0.0])
-    cube = engine3d.Mesh("Kostka", 8)
+    cubeedges = np.array([[0, 1], [1, 2], [2, 3], [3, 0], [4, 5], [5, 6], [6, 7], [7, 4], [0, 4], [1, 5], [2, 6], [3, 7]])
+    cube = engine3d.Mesh("Kostka", 8, cubeedges)
 
+    planeedges = np.array([[0,1], [1,2], [2,3], [3,0]])
+    plane = engine3d.Mesh("Ziemia", 4, planeedges)
     # Since we have no 3d model - we make our cube by hand...
 
     cube.vertices[0] = engine3d.Vector4(-1.0, -1.0, -1.0, 0.0)
@@ -51,8 +55,14 @@ if __name__ == "__main__":
     cube.vertices[6] = engine3d.Vector4(1.0, 1.0, 1.0, 0.0)
     cube.vertices[7] = engine3d.Vector4(-1.0, 1.0, 1.0, 0.0)
 
+
+    plane.vertices[0] = engine3d.Vector4(-1.0, -1.0, 1, 0.0)
+    plane.vertices[1] = engine3d.Vector4(-1.0, 1.0, 1, 0.0)
+    plane.vertices[2] = engine3d.Vector4(1.0, -1.0, 1, 0.0)
+    plane.vertices[3] = engine3d.Vector4(1.0, 1.0, 1, 0.0)
     # Initial scale mesh
     cube.Scale(4., 4., 4.)
+    plane.Scale(4., 4., 4.)
 
     g = Game()
     g.run()
