@@ -10,15 +10,10 @@ class Game:
         self.w = 640
         self.h = 480
         self.screen = pygame.display.set_mode((self.w, self.h))
+        print("Display initialized")
         self.background = pygame.image.load("back.jpg").convert()
         self.surface = pygame.Surface((640, 480))
         self.surface.fill((255, 255, 255))
-
-
-
-
-
-
 
     def run(self):
         clock = pygame.time.Clock()
@@ -28,8 +23,10 @@ class Game:
                 if event.type == pygame.QUIT:
                     sys.exit(0)
 
-
+            # We rotate our cube mesh...
             cube.Rotate(0.01, 0.02)
+
+            # ... and render it
             cube.Render(self.surface)
             self.screen.blit(self.surface, (0, 0))
             pygame.display.update()
@@ -39,6 +36,9 @@ if __name__ == "__main__":
 
     #c = engine3d.Camera([0.0, 0.0, 10.0], [0.0, 0.0, 0.0])
     cube = engine3d.Mesh("Kostka", 8)
+
+    # Since we have no 3d model - we make our cube by hand...
+
     cube.vertices[0] = engine3d.Vector4(-1.0, 1.0, 1.0, 0.0)
     cube.vertices[1] = engine3d.Vector4(1.0, 1.0, 1.0, 1.0)
     cube.vertices[2] = engine3d.Vector4(-1.0, -1.0, 1.0, 0.0)

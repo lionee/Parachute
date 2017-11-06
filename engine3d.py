@@ -5,7 +5,7 @@ import math
 
 
 #
-# Vertex4
+# Vector4
 #
 class Vector4:
     def __init__(self, x, y, z, w):
@@ -49,6 +49,7 @@ class Mesh:
         self.rotation = np.array([0., 0., 0.])
         self.mvp = Vector4(0. ,0. ,0. ,0.)
         self.points2d = np.array([0, 0]) * verts_count
+        print("Mesh created")
 
     def Scale(self, x, y, z):
         s_matrix = self.ScaleMatrix = np.array([[x, 0., 0., 0.],
@@ -107,12 +108,14 @@ class Mesh:
 
             x = vert.retx()*(300/vert.retz())
             y = vert.rety()*(300/vert.retz())
-            print((int(x) + int(surface.get_width()/2), int(y) + int(surface.get_height()/2)))
+            #print((int(x) + int(surface.get_width()/2), int(y) + int(surface.get_height()/2)))
 
             # TODO - Clipping!
 
             #if (x>=0 and y>=0 and x<surface.get_width() and y<surface.get_height()):
             pygame.draw.circle(surface, (0,0,0), (int(x) + int(surface.get_width()/2), int(y) + int(surface.get_height()/2)), 4)
+            #print(int(x))
+            #pygame.gfxdraw.aacircle(surface, x + surface.get_width()/2, y + surface.get_height()/2, 4 (0,0,0))
             vert.vector[2] = v
 
 
