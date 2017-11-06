@@ -1,3 +1,6 @@
+# Attempt to write a 3d game.
+# by Daniel Czerniawski
+
 import pygame
 import numpy as np
 from pygame.locals import *
