@@ -111,6 +111,7 @@ class Mesh:
         return t_matrix;
 
 
+
     def Render(self, surface):
         """
         THIS CODE USED TO RENDER ONLY DOTS ON EDGES. REPLACED BY LINE DRAWING BELOW!
@@ -149,6 +150,7 @@ class Mesh:
         """
 
         points = []
+
         for vert in self.vertices:
 
             v = vert.vector[2]
@@ -160,13 +162,18 @@ class Mesh:
 
             vert.vector[2] = v
 
-        face_list = []; face_color = []
+
+        face_list = []; face_color = []; depth = []
         for face in self.faces:
            for i in face:
                coords = [points[i] for i in face]
                face_list += [coords]
                face_color += [self.colors[self.faces.index(face)]]
 
+
+
+        #order = sorted(range(len(face_list)), key=lambda i:depth[i], reverse=1)
+        #print(face_list)
         for i in range(len(face_list)):
                 pygame.draw.polygon(surface, face_color[i], face_list[i])
 
