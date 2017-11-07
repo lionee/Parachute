@@ -42,13 +42,14 @@ class Camera:
 #   Class is defining shape (mesh). Takes name and vertices count as input.
 #
 class Mesh:
-    def __init__(self, name, verts_count, edges):
+    def __init__(self, name, verts_count, edges, faces):
         self.name = name
         self.vertices = [np.array([0., 0., 0., 0.])] * verts_count
         self.position = np.array([0., 0., 0.])
         self.rotation = np.array([0., 0., 0.])
         # todo: make below simpler!
         self.edges = edges
+        self.faces = faces
 
 
 
@@ -129,6 +130,8 @@ class Mesh:
             vert.vector[2] = v
         """
         #   Render edges!
+
+        """
         for edge in self.edges:
             points =[]
 
@@ -141,3 +144,30 @@ class Mesh:
 
                 vertedge.vector[2]=ev
             pygame.draw.line(surface, (0,0,0), points[0], points[1], 1)
+
+        """
+
+        points =[]
+        for vert in self.vertices:
+
+            v = vert.vector[2]
+            vert.vector[2] += 15
+
+            ex = vert.retx()*(300/vert.retz())
+            ey = vert.rety()*(300/vert.retz())
+            points += [(int(ex) + int(surface.get_width() / 2), int(ey) + int(surface.get_height() / 2))]
+
+            vert.vector[2] = v
+
+        face_list = []; face_color = []
+        for face in self.faces:
+           for i in face:
+               coords = [points[i] for i in face]
+               face_list += [coords]
+               print (face_list)
+              # face_color += [colors[face.index(face)]]
+
+        for i in range(len(face_list)):
+                pass
+                pygame.draw.polygon(surface,(128,255,128), face_list[i])
+
