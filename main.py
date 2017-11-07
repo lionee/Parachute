@@ -6,6 +6,7 @@ import numpy as np
 from pygame.locals import *
 import sys
 import engine3d
+import os
 
 
 class Game:
@@ -13,6 +14,8 @@ class Game:
         self.w = 1280
         self.h = 720
         self.screen = pygame.display.set_mode((self.w, self.h))
+        os.environ['SDL_VIDEO_CENTERED'] = '1'
+        pygame.display.set_caption("Parachute Game")
         print("Display initialized")
         self.background = pygame.image.load("back.jpg").convert()
         self.surface = pygame.Surface((self.w, self.h))
@@ -20,18 +23,22 @@ class Game:
 
     def run(self):
         clock = pygame.time.Clock()
+
         while True:
+            scale=1
+            scale+=0.001
             clock.tick(60)
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     sys.exit(0)
-
-            # We rotate our cube mesh...
-            cube.Rotate(0.01, 0.02)
-            plane.Rotate(0.01,0)
+            self.surface.fill((255,255,255))
+            # We rotate and/or scale our meshes
+            cube.Rotate(0.02, 0.05, 0.01)
+            plane.Scale(scale, scale, 0)
+            plane.Rotate(0.0, 0, 0.03)
             # ... and render it
             cube.Render(self.surface)
-            #plane.Render(self.surface)
+            plane.Render(self.surface)
             self.screen.blit(self.surface, (0, 0))
             pygame.display.update()
 
@@ -44,7 +51,8 @@ if __name__ == "__main__":
 
     planeedges = np.array([[0,1], [1,2], [2,3], [3,0]])
     plane = engine3d.Mesh("Ziemia", 4, planeedges)
-    # Since we have no 3d model - we make our cube by hand...
+
+    # Since we have no 3d models - we make our models by hand...
 
     cube.vertices[0] = engine3d.Vector4(-1.0, -1.0, -1.0, 0.0)
     cube.vertices[1] = engine3d.Vector4(1.0, -1.0, -1.0, 0.0)
@@ -58,11 +66,11 @@ if __name__ == "__main__":
 
     plane.vertices[0] = engine3d.Vector4(-1.0, -1.0, 1, 0.0)
     plane.vertices[1] = engine3d.Vector4(-1.0, 1.0, 1, 0.0)
-    plane.vertices[2] = engine3d.Vector4(1.0, -1.0, 1, 0.0)
-    plane.vertices[3] = engine3d.Vector4(1.0, 1.0, 1, 0.0)
+    plane.vertices[2] = engine3d.Vector4(1.0, 1.0, 1, 0.0)
+    plane.vertices[3] = engine3d.Vector4(1.0, -1.0, 1, 0.0)
     # Initial scale mesh
     cube.Scale(4., 4., 4.)
-    plane.Scale(4., 4., 4.)
+    plane.Scale(7., 7., 0.)
 
     g = Game()
     g.run()

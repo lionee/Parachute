@@ -5,7 +5,7 @@ import math
 
 
 #
-# Vector4
+# Vector4 class
 #
 class Vector4:
     def __init__(self, x, y, z, w):
@@ -52,7 +52,7 @@ class Mesh:
 
 
 
-        print("Mesh created")
+        print("Mesh created:", self.name)
 
     def Scale(self, x, y, z):
         s_matrix = self.ScaleMatrix = np.array([[x, 0., 0., 0.],
@@ -65,13 +65,16 @@ class Mesh:
 
         return s_matrix;
 
-    def Rotate(self, radiansx, radiansy):
+    def Rotate(self, radiansx, radiansy, radiansz):
 
         rsinx = math.sin(radiansx)
         rcosx = math.cos(radiansx)
 
         rsiny= math.sin(radiansy)
         rcosy= math.cos(radiansy)
+
+        rsinz = math.sin(radiansz)
+        rcosz = math.cos(radiansz)
 
         # Rotation Matrix around X axis
         rx_matrix = self.RotationXMatrix = np.array([[rcosx, 0., rsinx, 0.],
@@ -83,8 +86,13 @@ class Mesh:
                                                 [0., rcosy, -rsiny, 0.],
                                                 [0, rsiny, rcosy, 0.],
                                                 [0., 0., 0., 1.]])
+        # Rotation Matrix around Z axis
+        rz_matrix = self.RotationZMatrix = np.array([   [rcosz, -rsinz, 0, 0.],
+                                                     [rsinz, rcosz, 0, 0.],
+                                                     [0, 0, 1, 0.],
+                                                     [0., 0., 0., 1.]])
         for vert in self.vertices:
-            vert.vector = vert.vector.dot(rx_matrix.dot(ry_matrix))
+            vert.vector = vert.vector.dot(rx_matrix.dot(ry_matrix).dot(rz_matrix))
 
         return rx_matrix;
 
@@ -102,8 +110,10 @@ class Mesh:
 
 
     def Render(self, surface):
-        surface.fill((255, 255, 0))
+        """
+        THIS CODE USED TO RENDER ONLY DOTS ON EDGES. REPLACED BY LINE DRAWING BELOW!
         v = Vector4(0. ,0. ,0. ,0.)
+
         for vert in self.vertices:
 
             v = vert.vector[2]
@@ -112,15 +122,12 @@ class Mesh:
             x = vert.retx()*(300/vert.retz())
             y = vert.rety()*(300/vert.retz())
             #print((int(x) + int(surface.get_width()/2), int(y) + int(surface.get_height()/2)))
-
-            # TODO - Clipping!
-
             #if (x>=0 and y>=0 and x<surface.get_width() and y<surface.get_height()):
-            pygame.draw.circle(surface, (0,0,0), (int(x) + int(surface.get_width()/2), int(y) + int(surface.get_height()/2)), 2)
+            #pygame.draw.circle(surface, (0,0,0), (int(x) + int(surface.get_width()/2), int(y) + int(surface.get_height()/2)), 2)
             #print(int(x))
             #pygame.gfxdraw.aacircle(surface, int(x) + int(surface.get_width()/2), int(y) + int(surface.get_height()/2), 1, (0,0,0))
             vert.vector[2] = v
-
+        """
         #   Render edges!
         for edge in self.edges:
             points =[]
