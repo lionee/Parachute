@@ -148,7 +148,7 @@ class Mesh:
 
         """
 
-        points =[]
+        points = []
         for vert in self.vertices:
 
             v = vert.vector[2]
@@ -168,6 +168,5 @@ class Mesh:
                face_color += [self.colors[self.faces.index(face)]]
 
         for i in range(len(face_list)):
-                pass
                 pygame.draw.polygon(surface, face_color[i], face_list[i])
 
