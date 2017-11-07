@@ -19,7 +19,7 @@ class Game:
         print("Display initialized")
         self.background = pygame.image.load("back.jpg").convert()
         self.surface = pygame.Surface((self.w, self.h))
-        self.surface.fill((255, 255, 255))
+        self.surface.fill((0, 0, 0))
 
     def run(self):
         clock = pygame.time.Clock()
@@ -37,8 +37,8 @@ class Game:
             self.surface.fill((255,255,255))
             # We rotate and/or scale our meshes
             #cube.Rotate(0.02, 0.05, 0.01)
-            plane.Scale(scale, scale, 0)
-            plane.Rotate(0.0, 0, -0.003)
+            #plane.Scale(scale, scale, 0)
+            plane.Rotate(0.0, 0, -0.02)
             # ... and render it
            # cube.Render(self.surface)
             plane.Render(self.surface)
@@ -54,9 +54,9 @@ if __name__ == "__main__":
 
     planeedges = np.array([[0,1], [1,2], [2,3], [3,0]])
     planefaces = (0,1,2),(0,3,2)
-    planecolors = ((128,255,128))
+    planecolors = (128,255,128),(255,128,128)
 
-    plane = engine3d.Mesh("Ziemia", 4, planeedges, planefaces)
+    plane = engine3d.Mesh("Ziemia", 4, planeedges, planefaces, planecolors)
 
     # Since we have no 3d models - we make our models by hand...
     """
@@ -76,7 +76,7 @@ if __name__ == "__main__":
     plane.vertices[3] = engine3d.Vector4(1.0, -1.0, 1, 0.0)
     # Initial scale mesh
     #cube.Scale(4., 4., 4.)
-    plane.Scale(1., 1., 0.)
+    plane.Scale(4., 4., 0.)
 
     g = Game()
     g.run()

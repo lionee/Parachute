@@ -42,7 +42,7 @@ class Camera:
 #   Class is defining shape (mesh). Takes name and vertices count as input.
 #
 class Mesh:
-    def __init__(self, name, verts_count, edges, faces):
+    def __init__(self, name, verts_count, edges, faces, colors):
         self.name = name
         self.vertices = [np.array([0., 0., 0., 0.])] * verts_count
         self.position = np.array([0., 0., 0.])
@@ -50,6 +50,7 @@ class Mesh:
         # todo: make below simpler!
         self.edges = edges
         self.faces = faces
+        self.colors = colors
 
 
 
@@ -128,10 +129,10 @@ class Mesh:
             #print(int(x))
             #pygame.gfxdraw.aacircle(surface, int(x) + int(surface.get_width()/2), int(y) + int(surface.get_height()/2), 1, (0,0,0))
             vert.vector[2] = v
-        """
+
         #   Render edges!
 
-        """
+
         for edge in self.edges:
             points =[]
 
@@ -164,10 +165,9 @@ class Mesh:
            for i in face:
                coords = [points[i] for i in face]
                face_list += [coords]
-               print (face_list)
-              # face_color += [colors[face.index(face)]]
+               face_color += [self.colors[self.faces.index(face)]]
 
         for i in range(len(face_list)):
                 pass
-                pygame.draw.polygon(surface,(128,255,128), face_list[i])
+                pygame.draw.polygon(surface, face_color[i], face_list[i])
 
