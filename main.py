@@ -28,7 +28,7 @@ class Game:
 
     def run(self):
         clock = pygame.time.Clock()
-        alt = 200 # Initial altitude
+        alt = 400 # Initial altitude
         Landed = 0 # Have we landed?
 
         while (Landed < 1):
