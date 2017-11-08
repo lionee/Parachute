@@ -50,9 +50,9 @@ class Game:
             # Rotate our Meshes
             # todo: prepare common function
 
-            plane.Rotate(0.0, 0, -0.02)
-            road.Rotate(0.0, 0, -0.02)
-            road2.Rotate(0.0, 0, -0.02)
+            plane.Rotate(0.0, 0, 0.0)
+            road.Rotate(0.0, 0, 0.0)
+            road2.Rotate(0.0, 0, 0.0)
 
             # Render Meshes
             # todo: prepare commmon function
