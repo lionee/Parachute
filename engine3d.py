@@ -1,3 +1,9 @@
+# Engine is capable of rendering not only flat objects used in this game.
+# It can render any 3d object.
+#
+# TODO: z-buffering, loading objects from Blender exports.
+#
+
 import numpy as np
 import pygame
 from pygame import gfxdraw
@@ -20,6 +26,9 @@ class Vector4:
     def retz(self):
         return self.vector[2]
 
+    def retw(self):
+        return self.vector[3]
+
     def print_vertex4(self):
         print(self.vector)
 
@@ -29,13 +38,25 @@ class Vector4:
 #   Class is defining camera object
 #
 class Camera:
-    def __init__(self, position, target):
+    def __init__(self, position):
 
         # Camera position in space
-        self.position = np.array(position)
+        self.position = list(position)
 
         # Where is camera looking?
-        self.target = np.array(target)
+        #self.target = target
+
+    def update(self, dt, key):
+        s = dt/1000 * 10
+
+        if key[pygame.K_w]: self.position[1]+=s
+        if key[pygame.K_s]: self.position[1]-=s
+
+        if key[pygame.K_a]: self.position[0]-=s
+        if key[pygame.K_d]: self.position[0]+=s
+
+        if key[pygame.K_z]: self.position[2] -= s
+        if key[pygame.K_x]: self.position[2] += s
 
 
 #
@@ -45,15 +66,9 @@ class Mesh:
     def __init__(self, name, verts_count, edges, faces, colors):
         self.name = name
         self.vertices = [np.array([0., 0., 0., 0.])] * verts_count
-        self.position = np.array([0., 0., 0.])
-        self.rotation = np.array([0., 0., 0.])
-        # todo: make below simpler!
         self.edges = edges
         self.faces = faces
         self.colors = colors
-
-
-
         print("Mesh created:", self.name)
 
     def Scale(self, x, y, z):
@@ -89,7 +104,7 @@ class Mesh:
                                                 [0, rsiny, rcosy, 0.],
                                                 [0., 0., 0., 1.]])
         # Rotation Matrix around Z axis
-        rz_matrix = self.RotationZMatrix = np.array([   [rcosz, -rsinz, 0, 0.],
+        rz_matrix = self.RotationZMatrix = np.array([[rcosz, -rsinz, 0, 0.],
                                                      [rsinz, rcosz, 0, 0.],
                                                      [0, 0, 1, 0.],
                                                      [0., 0., 0., 1.]])
@@ -107,12 +122,13 @@ class Mesh:
 
         for vert in self.vertices:
             vert.vector = vert.vector.dot(t_matrix)
+            print(vert.vector[3])
 
         return t_matrix;
 
 
 
-    def Render(self, surface):
+    def Render(self, surface, cam):
         """
         THIS CODE USED TO RENDER ONLY DOTS ON EDGES. REPLACED BY LINE DRAWING BELOW!
         v = Vector4(0. ,0. ,0. ,0.)
@@ -153,14 +169,13 @@ class Mesh:
 
         for vert in self.vertices:
 
-            v = vert.vector[2]
-            vert.vector[2] += 15
+            x,y,z = vert.vector[0],vert.vector[1],vert.vector[2]
+            x-=cam.position[0]; y-=cam.position[1]; z-=cam.position[2]
 
-            ex = vert.retx()*(300/vert.retz())
-            ey = vert.rety()*(300/vert.retz())
+            f=500/z
+
+            ex, ey = x * f, y * f
             points += [(int(ex) + int(surface.get_width() / 2), int(ey) + int(surface.get_height() / 2))]
-
-            vert.vector[2] = v
 
 
         face_list = []; face_color = []; depth = []
@@ -173,7 +188,7 @@ class Mesh:
 
 
         #order = sorted(range(len(face_list)), key=lambda i:depth[i], reverse=1)
-        #print(face_list)
+
         for i in range(len(face_list)):
                 pygame.draw.polygon(surface, face_color[i], face_list[i])
 
