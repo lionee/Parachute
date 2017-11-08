@@ -3,3 +3,20 @@ References:
 https://www.davrous.com/2013/06/13/tutorial-series-learning-how-to-write-a-3d-soft-engine-from-scratch-in-c-typescript-or-javascript/
 https://www.youtube.com/watch?v=WKkY_WNCj_Q
 https://www.youtube.com/watch?v=g4E9iq0BixA
+
+
+ cubeedges = np.array([[0, 1], [1, 2], [2, 3], [3, 0], [4, 5], [5, 6], [6, 7], [7, 4], [0, 4], [1, 5], [2, 6], [3, 7]])
+    cubefaces = (0,1,2,3),(4,5,6,7),(0,1,5,4),(2,3,7,6),(0,3,7,4),(1,2,6,5)
+    cubecolors = (255,1,2),(4,255,6),(255,255,5),(2,255,255),(255,3,255),(255,255,100)
+
+    cube = engine3d.Mesh("Kostka", 8, cubeedges, cubefaces, cubecolors)
+
+
+ cube.vertices[0] = engine3d.Vector4(-1.0, -1.0, -1.0, 0.0)
+    cube.vertices[1] = engine3d.Vector4(1.0, -1.0, -1.0, 0.0)
+    cube.vertices[2] = engine3d.Vector4(1.0, 1.0, -1.0, 0.0)
+    cube.vertices[3] = engine3d.Vector4(-1.0, 1.0, -1.0, 0.0)
+    cube.vertices[4] = engine3d.Vector4(-1.0, -1.0, 1.0, 0.0)
+    cube.vertices[5] = engine3d.Vector4(1.0, -1.0, 1.0, 0.0)
+    cube.vertices[6] = engine3d.Vector4(1.0, 1.0, 1.0, 0.0)
+    cube.vertices[7] = engine3d.Vector4(-1.0, 1.0, 1.0, 0.0)
