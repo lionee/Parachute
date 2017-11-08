@@ -53,8 +53,8 @@ class Camera:
         if key[pygame.K_w]: self.position[1]+=s
         if key[pygame.K_s]: self.position[1]-=s
 
-        if key[pygame.K_a]: self.position[0]-=s
-        if key[pygame.K_d]: self.position[0]+=s
+        if key[pygame.K_d]: self.position[0]-=s
+        if key[pygame.K_a]: self.position[0]+=s
 
         if key[pygame.K_z]: self.position[2] -= s
         if key[pygame.K_x]: self.position[2] += s

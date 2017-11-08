@@ -24,12 +24,18 @@ class Game:
         self.surface = pygame.Surface((self.w, self.h))
         self.surface.fill((153, 204, 255))
 
+        self.player = pygame.image.load("skydiver.png").convert_alpha()
+        self.player = pygame.transform.scale2x(self.player)
+
 
 
     def run(self):
         clock = pygame.time.Clock()
+        alt = 100 # Initial altitude
+        Landed = 0 # Have we landed?
 
-        while True:
+        while (Landed < 1):
+            alt-=.09 # Falling speed
 
             dt = clock.tick(60)
             for event in pygame.event.get():
@@ -40,26 +46,35 @@ class Game:
                         sys.exit(0)
             self.surface.fill((153, 204, 255))
 
+            c.position[2]=alt
+            # Rotate our Meshes
+            # todo: prepare common function
 
-            # Rotate our ground plane
             plane.Rotate(0.0, 0, -0.02)
             road.Rotate(0.0, 0, -0.02)
             road2.Rotate(0.0, 0, -0.02)
-            # ... and render it
+
+            # Render Meshes
+            # todo: prepare commmon function
 
             plane.Render(self.surface, c)
             road.Render(self.surface, c)
             road2.Render(self.surface, c)
 
-
+            # Keyboard handling
             key = pygame.key.get_pressed()
             c.update(dt, key)
 
+            # Draw player sprite
+            self.surface.blit(self.player, (self.w/2, self.h/2))
+
             # render OSD texts, etc
-            on_screen_display.update("Altitude: "+ str(int(c.position[2])) + " m.")
+            on_screen_display.update("Altitude: "+ str(int(c.position[2])) + " m. X:" + str(int(c.position[0])) + " Y: " + str(int(c.position[1])))
             on_screen_display.render(self.surface, (0,0,0))
             self.screen.blit(self.surface, (0, 0))
             pygame.display.update()
+
+            if (alt<2): Landed=1
 
 
 if __name__ == "__main__":
@@ -100,3 +115,5 @@ if __name__ == "__main__":
     on_screen_display = osd.osd()
     g = Game()
     g.run()
+
+    print("Game Over")
