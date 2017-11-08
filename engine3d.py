@@ -39,25 +39,36 @@ class Vector4:
 #   Class is defining camera object
 #
 class Camera:
-    def __init__(self, position):
+    def __init__(self, position, radian):
 
         # Camera position in space
         self.position = list(position)
-
+        self.rotation = radian
         # Where is camera looking?
         #self.target = target
 
+
+
+
     def update(self, dt, key):
+
         s = dt/1000 * 10
 
-        if key[pygame.K_w]: self.position[1]+=s
-        if key[pygame.K_s]: self.position[1]-=s
+        #self.radian=rot
 
-        if key[pygame.K_d]: self.position[0]-=s
-        if key[pygame.K_a]: self.position[0]+=s
+        x, y = s * math.sin(self.rotation), s * math.cos(self.rotation)
+
+        if key[pygame.K_w]: self.position[0]+=x; self.position[1]+=y
+        if key[pygame.K_s]: self.position[0]-=x; self.position[1]-=y
+
+
+        if key[pygame.K_d]: self.rotation+=s/10
+        if key[pygame.K_a]: self.rotation-=s/10
 
         if key[pygame.K_z]: self.position[2] -= s
         if key[pygame.K_x]: self.position[2] += s
+
+
 
 
 #
@@ -127,7 +138,10 @@ class Mesh:
 
         return t_matrix;
 
-
+    def rotate2d(self, pos, rad):
+        x,y = pos
+        s, c = math.sin(rad), math.cos(rad)
+        return x*c - y*s, y*c + x*s
 
     def Render(self, surface, cam):
         """
@@ -173,6 +187,7 @@ class Mesh:
             x,y,z = vert.vector[0],vert.vector[1],vert.vector[2]
             x-=cam.position[0]; y-=cam.position[1]; z-=cam.position[2]
 
+            x,y = self.rotate2d((x,y), cam.rotation)
             f=500/z
 
             ex, ey = x * f, y * f

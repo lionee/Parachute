@@ -1,5 +1,5 @@
 # Attempt to write a 3d game.
-# This will be remake of Skydive originaly made on Nokie 3510i
+# This will be remake of Skydive originaly made on Nokia 3510i
 # by Daniel Czerniawski
 
 import pygame
@@ -25,13 +25,10 @@ class Game:
         self.surface.fill((153, 204, 255))
 
         self.player = pygame.image.load("skydiver.png").convert_alpha()
-        self.player = pygame.transform.scale2x(self.player)
-
-
 
     def run(self):
         clock = pygame.time.Clock()
-        alt = 100 # Initial altitude
+        alt = 200 # Initial altitude
         Landed = 0 # Have we landed?
 
         while (Landed < 1):
@@ -44,15 +41,17 @@ class Game:
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
                         sys.exit(0)
+
             self.surface.fill((153, 204, 255))
 
+            # we are falling
             c.position[2]=alt
             # Rotate our Meshes
             # todo: prepare common function
 
-            plane.Rotate(0.0, 0, 0.0)
-            road.Rotate(0.0, 0, 0.0)
-            road2.Rotate(0.0, 0, 0.0)
+            plane.Rotate(0.0, 0, 0)
+            road.Rotate(0.0, 0, 0)
+            road2.Rotate(0.0, 0, 0)
 
             # Render Meshes
             # todo: prepare commmon function
@@ -65,21 +64,33 @@ class Game:
             key = pygame.key.get_pressed()
             c.update(dt, key)
 
+            # Draw shadow on certain altitude
+            if (c.position[2]<60):
+                pygame.draw.circle(self.surface, (100, 100, 100), (int(self.w/2), 525-int(50/c.position[2])*5-34), int(120 / c.position[2]))
+
             # Draw player sprite
-            self.surface.blit(self.player, (self.w/2, self.h/2))
+            self.surface.blit(self.player, (self.w/2-self.player.get_width()/2, self.h/2-self.player.get_height()/2))
 
             # render OSD texts, etc
-            on_screen_display.update("Altitude: "+ str(int(c.position[2])) + " m. X:" + str(int(c.position[0])) + " Y: " + str(int(c.position[1])))
-            on_screen_display.render(self.surface, (0,0,0))
+            if (alt>2):
+                on_screen_display.update("Altitude: "+ str(int(c.position[2])) + " m.")
+
+
+            else:
+                on_screen_display.update("YOU ARE DEAD BABY!")
+            on_screen_display.render(self.surface, (0, 0, 0))
+
             self.screen.blit(self.surface, (0, 0))
             pygame.display.update()
 
             if (alt<2): Landed=1
 
+        pygame.time.wait(10000)
 
 if __name__ == "__main__":
+
     pygame.init()
-    c = engine3d.Camera((20.0, 0.0, 400.0))
+    c = engine3d.Camera((0.0, 0.0, 400.0), 0.4)
 
     # Since we have no 3d models - we make our models by hand...
     planeedges = np.array([[0,1], [1,2], [2,3], [3,0]])
@@ -95,7 +106,7 @@ if __name__ == "__main__":
 
     roadedges=np.array([[0,1], [1,2], [2,3], [3,0]])
     roadfaces = (0, 1, 2), (0, 3, 2)
-    roadcolors = (0, 0, 0), (0, 0, 0)
+    roadcolors = (200, 200, 200), (200, 200, 200)
 
     road = engine3d.Mesh("Droga", 4, roadedges, roadfaces, roadcolors)
 
@@ -107,7 +118,7 @@ if __name__ == "__main__":
     road2 = copy.deepcopy(road)
     # Initial scale mesh
 
-    plane.Scale(20., 20., 0.)
+    plane.Scale(60., 50., 0.)
     road.Scale(30,4,0)
     road2.Scale(55,4,0)
 
