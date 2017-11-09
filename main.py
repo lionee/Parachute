@@ -20,7 +20,6 @@ class Game:
         os.environ['SDL_VIDEO_CENTERED'] = '1'
         pygame.display.set_caption("Parachute Game")
         print("Display initialized")
-        self.background = pygame.image.load("back.jpg").convert()
         self.surface = pygame.Surface((self.w, self.h))
         self.surface.fill((153, 204, 255))
 
@@ -32,7 +31,7 @@ class Game:
         Landed = 0 # Have we landed?
 
         while (Landed < 1):
-            alt-=.09 # Falling speed
+            alt-=.59 # Falling speed
 
             dt = clock.tick(60)
             for event in pygame.event.get():
