@@ -62,8 +62,8 @@ class Camera:
         if key[pygame.K_s]: self.position[0]-=x; self.position[1]-=y
 
 
-        if key[pygame.K_d]: self.rotation+=s/10
-        if key[pygame.K_a]: self.rotation-=s/10
+        if key[pygame.K_d]: self.rotation-=s/10
+        if key[pygame.K_a]: self.rotation+=s/10
 
         if key[pygame.K_z]: self.position[2] -= s
         if key[pygame.K_x]: self.position[2] += s

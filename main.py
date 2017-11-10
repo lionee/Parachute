@@ -20,11 +20,10 @@ class Game:
         os.environ['SDL_VIDEO_CENTERED'] = '1'
         pygame.display.set_caption("Parachute Game")
         print("Display initialized")
-        self.background = pygame.image.load("back.jpg").convert()
         self.surface = pygame.Surface((self.w, self.h))
         self.surface.fill((153, 204, 255))
 
-        self.player = pygame.image.load("skydiver.png").convert_alpha()
+        self.player = pygame.image.load("assets\skydiver.png").convert_alpha()
 
     def run(self):
         clock = pygame.time.Clock()
