@@ -10,6 +10,7 @@ import engine3d
 import os
 import osd
 import copy
+import player
 
 
 class Game:
@@ -23,7 +24,7 @@ class Game:
         self.surface = pygame.Surface((self.w, self.h))
         self.surface.fill((153, 204, 255))
 
-        self.player = pygame.image.load("assets\skydiver.png").convert_alpha()
+
 
     def run(self):
         clock = pygame.time.Clock()
@@ -68,7 +69,9 @@ class Game:
                 pygame.draw.circle(self.surface, (100, 100, 100), (int(self.w/2), 525-int(50/c.position[2])*5-34), int(120 / c.position[2]))
 
             # Draw player sprite
-            self.surface.blit(self.player, (self.w/2-self.player.get_width()/2, self.h/2-self.player.get_height()/2))
+            #self.surface.blit(self.player, (self.w/2-self.player.get_width()/2, self.h/2-self.player.get_height()/2))
+            sprite_group.update(dt)
+            sprite_group.draw(self.surface)
 
             # render OSD texts, etc
             if (alt>2):
@@ -123,7 +126,11 @@ if __name__ == "__main__":
 
     road2.Rotate(0,0,.8)
     on_screen_display = osd.osd()
+
     g = Game()
+
+    player = player.Player(g.w / 2 - 108 / 2, g.h / 2 - 104 / 2)
+    sprite_group = pygame.sprite.Group(player)
     g.run()
 
     print("Game Over")
