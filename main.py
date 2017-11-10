@@ -31,7 +31,7 @@ class Game:
         Landed = 0 # Have we landed?
 
         while (Landed < 1):
-            alt-=.09 # Falling speed
+            alt-=.59 # Falling speed
 
             dt = clock.tick(60)
             for event in pygame.event.get():
