@@ -11,7 +11,7 @@ class Player(pygame.sprite.Sprite):
         self.images = []
         self.images.append(load_image('assets/skydiver.png'))
         self.images.append(load_image('assets/skydiver2.png'))
-        self.animation_time = 30
+        self.animation_time = 50
         self.current_time = 0
         self.index = 0
         self.image = self.images[self.index]
@@ -26,3 +26,4 @@ class Player(pygame.sprite.Sprite):
             if self.index >= len(self.images):
                     self.index = 0
             self.image = self.images[self.index]
+

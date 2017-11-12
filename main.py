@@ -32,7 +32,7 @@ class Game:
         Landed = 0 # Have we landed?
 
         while (Landed < 1):
-            alt-=.59 # Falling speed
+            alt-=.19 # Falling speed
 
             dt = clock.tick(60)
             for event in pygame.event.get():
@@ -46,6 +46,7 @@ class Game:
 
             # we are falling
             c.position[2]=alt
+
             # Rotate our Meshes
             # todo: prepare common function
 
@@ -59,7 +60,8 @@ class Game:
             plane.Render(self.surface, c)
             road.Render(self.surface, c)
             road2.Render(self.surface, c)
-
+            circle.Render(self.surface, c)
+            circle2.Render(self.surface, c)
             # Keyboard handling
             key = pygame.key.get_pressed()
             c.update(dt, key)
@@ -87,7 +89,7 @@ class Game:
 
             if (alt<2): Landed=1
 
-        pygame.time.wait(10000)
+
 
 if __name__ == "__main__":
 
@@ -99,25 +101,37 @@ if __name__ == "__main__":
     planefaces = (0,1,2),(0,3,2)
     planecolors = (51, 204, 51),(51, 204, 51)
 
-    plane = engine3d.Mesh("Ziemia", 4, planeedges, planefaces, planecolors)
+    plane = engine3d.Mesh("Ziemia", 4, planeedges, planefaces, planecolors, 2)
 
-    plane.vertices[0] = engine3d.Vector4(-3.0, -3.3, 10, 0.0)
-    plane.vertices[1] = engine3d.Vector4(-4.2, 2.6, 10, 0.0)
-    plane.vertices[2] = engine3d.Vector4(2.1, 5.0, 10, 0.0)
-    plane.vertices[3] = engine3d.Vector4(2.1, -3.3, 10, 0.0)
+    plane.vertices[0] = engine3d.Vector4(-3.0, -3.3, 1, 0.0)
+    plane.vertices[1] = engine3d.Vector4(-4.2, 2.6, 1, 0.0)
+    plane.vertices[2] = engine3d.Vector4(2.1, 5.0, 1, 0.0)
+    plane.vertices[3] = engine3d.Vector4(2.1, -3.3, 1, 0.0)
 
     roadedges=np.array([[0,1], [1,2], [2,3], [3,0]])
     roadfaces = (0, 1, 2), (0, 3, 2)
     roadcolors = (200, 200, 200), (200, 200, 200)
 
-    road = engine3d.Mesh("Droga", 4, roadedges, roadfaces, roadcolors)
+    road = engine3d.Mesh("Droga", 4, roadedges, roadfaces, roadcolors, 2)
 
-    road.vertices[0] = engine3d.Vector4(-1, -1, 11, 0.0)
-    road.vertices[1] = engine3d.Vector4(-1, 1, 11, 0.0)
-    road.vertices[2] = engine3d.Vector4(1, 1, 11, 0.0)
-    road.vertices[3] = engine3d.Vector4(1, -1, 11, 0.0)
+    road.vertices[0] = engine3d.Vector4(-1, -1, 2, 0.0)
+    road.vertices[1] = engine3d.Vector4(-1, 1, 2, 0.0)
+    road.vertices[2] = engine3d.Vector4(1, 1, 2, 0.0)
+    road.vertices[3] = engine3d.Vector4(1, -1, 2, 0.0)
 
     road2 = copy.deepcopy(road)
+
+    circleedges = np.array([[0, 1], [1, 2], [2, 3], [3, 0]])
+    circlefaces = (0, 1, 2), (0, 3, 2)
+    circlecolors = (51, 204, 51), (51, 204, 51)
+
+    circle = engine3d.Mesh("Koło", 4, planeedges, planefaces, planecolors, 1)
+
+    circle.vertices[0] = engine3d.Vector4(-1, -1, 30, 1)
+    circle.vertices[1] = engine3d.Vector4(-1, 1, 30, 1)
+    circle.vertices[2] = engine3d.Vector4(1, 1, 30, 1)
+    circle.vertices[3] = engine3d.Vector4(1, -1, 30, 1)
+    circle2 = copy.deepcopy(circle)
     # Initial scale mesh
 
     plane.Scale(60., 50., 0.)
@@ -125,6 +139,15 @@ if __name__ == "__main__":
     road2.Scale(55,4,0)
 
     road2.Rotate(0,0,.8)
+    #circle.Translate(8., 0., 1.)
+    #circle2.Translate(8., 0., 1.)
+    circle.Scale(4., 4., 1.)
+    circle2.Scale(4., 4., 1.)
+
+
+
+    circle2.Rotate(0,0,.785)
+
     on_screen_display = osd.osd()
 
     g = Game()

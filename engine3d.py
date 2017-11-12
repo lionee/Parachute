@@ -17,7 +17,6 @@ import math
 class Vector4:
     def __init__(self, x, y, z, w):
         self.vector = np.array([x, y, z, w])
-
     def retx(self):
         return self.vector[0]
 
@@ -41,20 +40,14 @@ class Vector4:
 class Camera:
     def __init__(self, position, radian):
 
-        # Camera position in space
+        # Camera position and rotation in space
         self.position = list(position)
         self.rotation = radian
-        # Where is camera looking?
-        #self.target = target
-
-
 
 
     def update(self, dt, key):
 
         s = dt/1000 * 10
-
-        #self.radian=rot
 
         x, y = s * math.sin(self.rotation), s * math.cos(self.rotation)
 
@@ -75,13 +68,15 @@ class Camera:
 #   Class is defining shape (mesh). Takes name and vertices count as input.
 #
 class Mesh:
-    def __init__(self, name, verts_count, edges, faces, colors):
+    def __init__(self, name, verts_count, edges, faces, colors, type):
         self.name = name
         self.vertices = [np.array([0., 0., 0., 0.])] * verts_count
         self.edges = edges
         self.faces = faces
         self.colors = colors
+        self.type = type # Rendering type: 1 - full, 2 - circles
         print("Mesh created:", self.name)
+
 
     def Scale(self, x, y, z):
         s_matrix = self.ScaleMatrix = np.array([[x, 0., 0., 0.],
@@ -93,6 +88,8 @@ class Mesh:
             vert.vector = vert.vector.dot(s_matrix)
 
         return s_matrix;
+
+
 
     def Rotate(self, radiansx, radiansy, radiansz):
 
@@ -133,8 +130,8 @@ class Mesh:
                       [0., 0., 0., 1.]])
 
         for vert in self.vertices:
-            vert.vector = vert.vector.dot(t_matrix)
-            print(vert.vector[3])
+             vert.vector = t_matrix.dot(vert.vector)
+
 
         return t_matrix;
 
@@ -144,67 +141,51 @@ class Mesh:
         return x*c - y*s, y*c + x*s
 
     def Render(self, surface, cam):
-        """
-        THIS CODE USED TO RENDER ONLY DOTS ON EDGES. REPLACED BY LINE DRAWING BELOW!
-        v = Vector4(0. ,0. ,0. ,0.)
+        # We draw dots
+        if(self.type==1):
 
-        for vert in self.vertices:
+            for vert in self.vertices:
 
-            v = vert.vector[2]
-            vert.vector[2] += 15
+                x, y, z = vert.vector[0], vert.vector[1], vert.vector[2]
+                x -= cam.position[0]
+                y -= cam.position[1]
+                z -= cam.position[2]
 
-            x = vert.retx()*(300/vert.retz())
-            y = vert.rety()*(300/vert.retz())
-            #print((int(x) + int(surface.get_width()/2), int(y) + int(surface.get_height()/2)))
-            #if (x>=0 and y>=0 and x<surface.get_width() and y<surface.get_height()):
-            #pygame.draw.circle(surface, (0,0,0), (int(x) + int(surface.get_width()/2), int(y) + int(surface.get_height()/2)), 2)
-            #print(int(x))
-            #pygame.gfxdraw.aacircle(surface, int(x) + int(surface.get_width()/2), int(y) + int(surface.get_height()/2), 1, (0,0,0))
-            vert.vector[2] = v
+                x, y = self.rotate2d((x, y), cam.rotation)
+                f = 500 / z
 
-        #   Render edges!
+                ex, ey = x * f, y * f
 
+                if (cam.position[2] >= vert.vector[2]):
+                    pygame.draw.circle(surface, (0,0,0), (int(ex) + int(surface.get_width() / 2), int(ey) + int(surface.get_height() / 2)), 2)
 
-        for edge in self.edges:
-            points =[]
+        # Or we draw shapes
+        if(self.type==2):
+            points = []
 
-            for vertedge in (self.vertices[edge[0]], self.vertices[edge[1]]):
-                ev = vertedge.vector[2]
-                vertedge.vector[2] += 15
-                ex = vertedge.retx() * (300 / vertedge.retz())
-                ey = vertedge.rety() * (300 / vertedge.retz())
-                points+=[(int(ex) + int(surface.get_width()/2), int(ey) + int(surface.get_height()/2))]
+            for vert in self.vertices:
 
-                vertedge.vector[2]=ev
-            pygame.draw.line(surface, (0,0,0), points[0], points[1], 1)
+                x,y,z = vert.vector[0],vert.vector[1],vert.vector[2]
+                x-=cam.position[0]; y-=cam.position[1]; z-=cam.position[2]
 
-        """
+                x,y = self.rotate2d((x,y), cam.rotation)
+                f=500/z
 
-        points = []
-
-        for vert in self.vertices:
-
-            x,y,z = vert.vector[0],vert.vector[1],vert.vector[2]
-            x-=cam.position[0]; y-=cam.position[1]; z-=cam.position[2]
-
-            x,y = self.rotate2d((x,y), cam.rotation)
-            f=500/z
-
-            ex, ey = x * f, y * f
-            points += [(int(ex) + int(surface.get_width() / 2), int(ey) + int(surface.get_height() / 2))]
+                ex, ey = x * f, y * f
+                points += [(int(ex) + int(surface.get_width() / 2), int(ey) + int(surface.get_height() / 2))]
 
 
-        face_list = []; face_color = []; depth = []
-        for face in self.faces:
-           for i in face:
-               coords = [points[i] for i in face]
-               face_list += [coords]
-               face_color += [self.colors[self.faces.index(face)]]
+            face_list = []; face_color = []; depth = []
+            for face in self.faces:
+               for i in face:
+                   coords = [points[i] for i in face]
+                   face_list += [coords]
+                   face_color += [self.colors[self.faces.index(face)]]
 
 
 
-        #order = sorted(range(len(face_list)), key=lambda i:depth[i], reverse=1)
+            #order = sorted(range(len(face_list)), key=lambda i:depth[i], reverse=1)
 
-        for i in range(len(face_list)):
-                pygame.draw.polygon(surface, face_color[i], face_list[i])
+            for i in range(len(face_list)):
+                    pygame.draw.polygon(surface, face_color[i], face_list[i])
 
