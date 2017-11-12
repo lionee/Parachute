@@ -157,7 +157,7 @@ class Mesh:
                 ex, ey = x * f, y * f
 
                 if (cam.position[2] >= vert.vector[2]):
-                    pygame.draw.circle(surface, (0,0,0), (int(ex) + int(surface.get_width() / 2), int(ey) + int(surface.get_height() / 2)), 2)
+                    pygame.draw.circle(surface, (0,0,0), (int(ex) + int(surface.get_width() / 2), int(ey) + int(surface.get_height() / 2)), 3)
 
         # Or we draw shapes
         if(self.type==2):

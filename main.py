@@ -62,6 +62,8 @@ class Game:
             road2.Render(self.surface, c)
             circle.Render(self.surface, c)
             circle2.Render(self.surface, c)
+            circle3.Render(self.surface, c)
+            circle4.Render(self.surface, c)
             # Keyboard handling
             key = pygame.key.get_pressed()
             c.update(dt, key)
@@ -132,6 +134,8 @@ if __name__ == "__main__":
     circle.vertices[2] = engine3d.Vector4(1, 1, 30, 1)
     circle.vertices[3] = engine3d.Vector4(1, -1, 30, 1)
     circle2 = copy.deepcopy(circle)
+    circle3 = copy.deepcopy(circle)
+    circle4 = copy.deepcopy(circle2)
     # Initial scale mesh
 
     plane.Scale(60., 50., 0.)
@@ -144,10 +148,14 @@ if __name__ == "__main__":
     circle.Scale(4., 4., 1.)
     circle2.Scale(4., 4., 1.)
 
+    circle3.Scale(4., 4., 1.)
+    circle4.Scale(4., 4., 1.)
 
 
+    circle4.Rotate(0,0,.785)
     circle2.Rotate(0,0,.785)
-
+    circle3.Translate(30, 0, 100)
+    circle4.Translate(30, 0, 100)
     on_screen_display = osd.osd()
 
     g = Game()
