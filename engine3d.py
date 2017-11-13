@@ -202,7 +202,6 @@ def RenderAllMeshes(meshes, alt, surface, camera):
 
     x = int(alt/100)-1
     for mesh in meshes:
-        print(x, mesh.name)
         if (mesh.name==str(x)):
             color=(255,0,0)
         else:

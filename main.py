@@ -94,9 +94,12 @@ class Game:
             sprite_group.draw(self.surface)
 
             # render OSD texts, etc
-            if (alt>2):
+            if (alt>100):
                 on_screen_display.update("Altitude: "+ str(int(c.position[2])) + " m.")
-            else:
+            elif (alt<100 and alt >2):
+                on_screen_display.update("Altitude: " + str(int(c.position[2])) + " m. OPEN PARACHUTE!!!")
+
+            elif(alt<2):
                 on_screen_display.update("YOU ARE DEAD BABY!")
             on_screen_display.render(self.surface, (0, 0, 0))
 
@@ -105,7 +108,7 @@ class Game:
             pygame.display.update()
 
             if (alt<2): Landed=1
-
+        pygame.time.wait(5000)
 
 if __name__ == "__main__":
 
