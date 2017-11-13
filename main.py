@@ -11,6 +11,7 @@ import os
 import osd
 import copy
 import player
+import random
 
 
 class Game:
@@ -24,11 +25,41 @@ class Game:
         self.surface = pygame.Surface((self.w, self.h))
         self.surface.fill((153, 204, 255))
 
+    def GenerateCircles(self, meshes_list, radius, amount):
+        print("Generating Circles...")
 
+        for i in range(amount):
+
+            # Max horizontal distance is 50
+            randx = random.randint(-25, 25)
+            randy = random.randint(-25, 25)
+
+            circleedges = np.array([[0, 1], [1, 2], [2, 3], [3, 0]])
+            circlefaces = (0, 1, 2), (0, 3, 2)
+            circlecolors = (51, 204, 51), (51, 204, 51)
+
+            cir = engine3d.Mesh(str(i), 4, circleedges, circlefaces, circlecolors, 1)
+
+            cir.vertices[0] = engine3d.Vector4(-1, -1, 1, 1)
+            cir.vertices[1] = engine3d.Vector4(-1, 1, 1, 1)
+            cir.vertices[2] = engine3d.Vector4(1, 1, 1, 1)
+            cir.vertices[3] = engine3d.Vector4(1, -1, 1, 1)
+
+            cir2 = copy.deepcopy(cir)
+
+            cir.Scale(radius, radius, 1.)
+            cir2.Scale(radius, radius, 1.)
+            cir2.Rotate(0, 0, .785)
+            cir.Translate(randx, randy, (i+1)*100) # adding 1 to i, to make sure we are not starting generation from 0 meters
+            cir2.Translate(randx, randy, (i+1)*100)
+
+
+            meshes_list.append(cir)
+            meshes_list.append(cir2)
 
     def run(self):
         clock = pygame.time.Clock()
-        alt = 400 # Initial altitude
+        alt = 800 # Initial altitude
         Landed = 0 # Have we landed?
 
         while (Landed < 1):
@@ -47,23 +78,9 @@ class Game:
             # we are falling
             c.position[2]=alt
 
-            # Rotate our Meshes
-            # todo: prepare common function
-
-            plane.Rotate(0.0, 0, 0)
-            road.Rotate(0.0, 0, 0)
-            road2.Rotate(0.0, 0, 0)
-
             # Render Meshes
-            # todo: prepare commmon function
+            engine3d.RenderAllMeshes(all_meshes, alt, self.surface, c)
 
-            plane.Render(self.surface, c)
-            road.Render(self.surface, c)
-            road2.Render(self.surface, c)
-            circle.Render(self.surface, c)
-            circle2.Render(self.surface, c)
-            circle3.Render(self.surface, c)
-            circle4.Render(self.surface, c)
             # Keyboard handling
             key = pygame.key.get_pressed()
             c.update(dt, key)
@@ -73,29 +90,32 @@ class Game:
                 pygame.draw.circle(self.surface, (100, 100, 100), (int(self.w/2), 525-int(50/c.position[2])*5-34), int(120 / c.position[2]))
 
             # Draw player sprite
-            #self.surface.blit(self.player, (self.w/2-self.player.get_width()/2, self.h/2-self.player.get_height()/2))
             sprite_group.update(dt)
             sprite_group.draw(self.surface)
 
             # render OSD texts, etc
             if (alt>2):
                 on_screen_display.update("Altitude: "+ str(int(c.position[2])) + " m.")
-
-
             else:
                 on_screen_display.update("YOU ARE DEAD BABY!")
             on_screen_display.render(self.surface, (0, 0, 0))
 
+            # Finally put all to screen
             self.screen.blit(self.surface, (0, 0))
             pygame.display.update()
 
             if (alt<2): Landed=1
 
 
-
 if __name__ == "__main__":
 
+
     pygame.init()
+
+    # Scene mesh list
+    all_meshes = list()
+
+    # Camera initialization
     c = engine3d.Camera((0.0, 0.0, 400.0), 0.4)
 
     # Since we have no 3d models - we make our models by hand...
@@ -123,42 +143,28 @@ if __name__ == "__main__":
 
     road2 = copy.deepcopy(road)
 
-    circleedges = np.array([[0, 1], [1, 2], [2, 3], [3, 0]])
-    circlefaces = (0, 1, 2), (0, 3, 2)
-    circlecolors = (51, 204, 51), (51, 204, 51)
-
-    circle = engine3d.Mesh("Koło", 4, planeedges, planefaces, planecolors, 1)
-
-    circle.vertices[0] = engine3d.Vector4(-1, -1, 30, 1)
-    circle.vertices[1] = engine3d.Vector4(-1, 1, 30, 1)
-    circle.vertices[2] = engine3d.Vector4(1, 1, 30, 1)
-    circle.vertices[3] = engine3d.Vector4(1, -1, 30, 1)
-    circle2 = copy.deepcopy(circle)
-    circle3 = copy.deepcopy(circle)
-    circle4 = copy.deepcopy(circle2)
     # Initial scale mesh
 
     plane.Scale(60., 50., 0.)
     road.Scale(30,4,0)
     road2.Scale(55,4,0)
 
+    # And Rotation
     road2.Rotate(0,0,.8)
-    #circle.Translate(8., 0., 1.)
-    #circle2.Translate(8., 0., 1.)
-    circle.Scale(4., 4., 1.)
-    circle2.Scale(4., 4., 1.)
 
-    circle3.Scale(4., 4., 1.)
-    circle4.Scale(4., 4., 1.)
-
-
-    circle4.Rotate(0,0,.785)
-    circle2.Rotate(0,0,.785)
-    circle3.Translate(30, 0, 100)
-    circle4.Translate(30, 0, 100)
+    # On screen text
     on_screen_display = osd.osd()
 
+    # We are adding to out mesh list
+    # TODO: sort meshes by Z axis to ensure right rendering
+    all_meshes.append(plane)
+    all_meshes.append(road)
+    all_meshes.append(road2)
+
     g = Game()
+
+    # Let's generate some circles to dall through
+    g.GenerateCircles(all_meshes, 2, 5)
 
     player = player.Player(g.w / 2 - 108 / 2, g.h / 2 - 104 / 2)
     sprite_group = pygame.sprite.Group(player)

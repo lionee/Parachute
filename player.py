@@ -16,6 +16,7 @@ class Player(pygame.sprite.Sprite):
         self.index = 0
         self.image = self.images[self.index]
         self.rect = pygame.Rect(positionx, positiony, 104, 108)
+        self.points = 0
 
     def update(self, dt):
 

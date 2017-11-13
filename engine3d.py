@@ -140,8 +140,9 @@ class Mesh:
         s, c = math.sin(rad), math.cos(rad)
         return x*c - y*s, y*c + x*s
 
-    def Render(self, surface, cam):
+    def Render(self, surface, cam, color):
         # We draw dots
+        calculated=False
         if(self.type==1):
 
             for vert in self.vertices:
@@ -156,8 +157,14 @@ class Mesh:
 
                 ex, ey = x * f, y * f
 
+            # TODO: Make it as point counting routine
+                if (int(cam.position[2]) == int(vert.vector[2]) and calculated==False):
+                   #print(int(cam.position[2]), vert.vector[2])
+                   calculated = True
+
+
                 if (cam.position[2] >= vert.vector[2]):
-                    pygame.draw.circle(surface, (0,0,0), (int(ex) + int(surface.get_width() / 2), int(ey) + int(surface.get_height() / 2)), 3)
+                    pygame.draw.circle(surface, color, (int(ex) + int(surface.get_width() / 2), int(ey) + int(surface.get_height() / 2)), 2)
 
         # Or we draw shapes
         if(self.type==2):
@@ -189,3 +196,15 @@ class Mesh:
             for i in range(len(face_list)):
                     pygame.draw.polygon(surface, face_color[i], face_list[i])
 
+
+
+def RenderAllMeshes(meshes, alt, surface, camera):
+
+    x = int(alt/100)-1
+    for mesh in meshes:
+        print(x, mesh.name)
+        if (mesh.name==str(x)):
+            color=(255,0,0)
+        else:
+            color=(255,255,0)
+        mesh.Render(surface, camera, color)
