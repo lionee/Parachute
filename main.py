@@ -167,7 +167,7 @@ if __name__ == "__main__":
     g = Game()
 
     # Let's generate some circles to dall through
-    g.GenerateCircles(all_meshes, 2, 5)
+    g.GenerateCircles(all_meshes, 1, 5)
 
     player = player.Player(g.w / 2 - 108 / 2, g.h / 2 - 104 / 2)
     sprite_group = pygame.sprite.Group(player)
