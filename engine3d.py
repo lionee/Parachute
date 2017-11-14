@@ -82,8 +82,8 @@ class Mesh:
         sumz = 0
         for vertex in self.vertices:
             sumz += vertex.retz()
-        print(math.sqrt(sumz))
-        return math.sqrt(sumz)
+
+        return sumz
 
     def Scale(self, x, y, z):
         s_matrix = np.array([[x, 0., 0., 0.],
@@ -166,9 +166,9 @@ class Mesh:
                     calculated = True
 
                 if (cam.position[2] >= vert.vector[2]):
-                    pygame.draw.circle(surface, color, (
-                    int(ex) + int(surface.get_width() / 2), int(ey) + int(surface.get_height() / 2)), 2)
+                    pygame.draw.circle(surface, color, (int(ex) + int(surface.get_width() / 2), int(ey) + int(surface.get_height() / 2)), 2)
 
+        vert_list = []
         # Or we draw shapes
         if (self.type == 2):
             points = []
@@ -179,6 +179,7 @@ class Mesh:
                 y -= cam.position[1]
                 z -= cam.position[2]
 
+                vert_list += [(x,y,z)]
                 x, y = self.rotate2d((x, y), cam.rotation)
                 f = 500 / z
 
@@ -188,14 +189,19 @@ class Mesh:
             face_list = []
             face_color = []
             depth = []
-            for face in self.faces:
+            for f in range(len(self.faces)):
+                face = self.faces[f]
                 for i in face:
                     coords = [points[i] for i in face]
                     face_list += [coords]
-                    face_color += [self.colors[self.faces.index(face)]]
+                    face_color += [self.colors[f]]
+                    depth += [sum(sum(vert_list[j][i] for j in face)**2 for i in range(3))]
 
-            for i in range(len(face_list)):
-                pygame.draw.polygon(surface, face_color[i], face_list[i])
+            order = sorted(range(len(face_list)), key=lambda i:depth[i], reverse=True)
+
+            for i in order:
+                if(cam.position[2]>vert.vector[2]):
+                    pygame.draw.polygon(surface, face_color[i], face_list[i])
 
 
 def RenderAllMeshes(meshes, alt, surface, camera):

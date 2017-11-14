@@ -49,8 +49,7 @@ class Game:
             cir.Scale(radius, radius, 1.)
             cir2.Scale(radius, radius, 1.)
             cir2.Rotate(0, 0, .785)
-            cir.Translate(randx, randy,
-                          (i + 1) * 100)  # adding 1 to i, to make sure we are not starting generation from 0 meters
+            cir.Translate(randx, randy, (i + 1) * 100)  # adding 1 to i, to make sure we are not starting generation from 0 meters
             cir2.Translate(randx, randy, (i + 1) * 100)
 
             meshes_list.append(cir)
@@ -108,7 +107,7 @@ class Game:
             pygame.display.update()
 
             if (alt < 2): Landed = 1
-        pygame.time.wait(5000)
+        
 
 
 def getz(mesh):
@@ -123,6 +122,23 @@ if __name__ == "__main__":
 
     # Camera initialization
     c = engine3d.Camera((0.0, 0.0, 400.0), 0.4)
+
+    cubeedges = np.array([[0, 1], [1, 2], [2, 3], [3, 0], [4, 5], [5, 6], [6, 7], [7, 4], [0, 4], [1, 5], [2, 6], [3, 7]])
+    cubefaces = (0, 1, 2, 3), (4, 5, 6, 7), (0, 1, 5, 4), (2, 3, 7, 6), (0, 3, 7, 4), (1, 2, 6, 5)
+    cubecolors = (100, 100, 100), (110, 110, 110), (120, 120, 120), (130, 130, 130), (140, 140, 140), (150, 150, 150)
+
+    cube = engine3d.Mesh("Kostka", 8, cubeedges, cubefaces, cubecolors, 2)
+
+    cube.vertices[0] = engine3d.Vector4(-1.0, -1.0, 0, 1)
+    cube.vertices[1] = engine3d.Vector4(1.0, -1.0, 0, 1)
+    cube.vertices[2] = engine3d.Vector4(1.0, 1.0, 0, 1)
+    cube.vertices[3] = engine3d.Vector4(-1.0, 1.0, 0, 1)
+    cube.vertices[4] = engine3d.Vector4(-1.0, -1.0, 10.0, 1)
+    cube.vertices[5] = engine3d.Vector4(1.0, -1.0, 10.0, 1)
+    cube.vertices[6] = engine3d.Vector4(1.0, 1.0, 10.0, 1)
+    cube.vertices[7] = engine3d.Vector4(-1.0, 1.0, 10.0, 1)
+
+
 
     # Since we have no 3d models - we make our models by hand...
     planeedges = np.array([[0, 1], [1, 2], [2, 3], [3, 0]])
@@ -158,6 +174,9 @@ if __name__ == "__main__":
     # And Rotation
     road2.Rotate(0, 0, .8)
 
+    cube.Scale(3,2,1)
+    cube.Rotate(0,0, 0.2)
+    cube.Translate(20,10,1)
     # On screen text
     on_screen_display = osd.Osd()
 
@@ -166,6 +185,7 @@ if __name__ == "__main__":
     all_meshes.append(plane)
     all_meshes.append(road)
     all_meshes.append(road2)
+    all_meshes.append(cube)
 
     g = Game()
 
