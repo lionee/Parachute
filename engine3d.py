@@ -7,7 +7,6 @@
 
 import numpy as np
 import pygame
-from pygame import gfxdraw
 import math
 
 
@@ -17,6 +16,7 @@ import math
 class Vector4:
     def __init__(self, x, y, z, w):
         self.vector = np.array([x, y, z, w])
+
     def retx(self):
         return self.vector[0]
 
@@ -24,7 +24,7 @@ class Vector4:
         return self.vector[1]
 
     def retz(self):
-        return int(self.vector[2])
+        return self.vector[2]
 
     def retw(self):
         return self.vector[3]
@@ -34,6 +34,8 @@ class Vector4:
 
     def get_nparray(self):
         return self.vector
+
+
 #
 #   Class is defining camera object
 #
@@ -44,24 +46,20 @@ class Camera:
         self.position = list(position)
         self.rotation = radian
 
-
     def update(self, dt, key):
 
-        s = dt/1000 * 10
+        s = dt / 1000 * 10
 
         x, y = s * math.sin(self.rotation), s * math.cos(self.rotation)
 
-        if key[pygame.K_w]: self.position[0]+=x; self.position[1]+=y
-        if key[pygame.K_s]: self.position[0]-=x; self.position[1]-=y
+        if key[pygame.K_w]: self.position[0] += x; self.position[1] += y
+        if key[pygame.K_s]: self.position[0] -= x; self.position[1] -= y
 
-
-        if key[pygame.K_d]: self.rotation-=s/10
-        if key[pygame.K_a]: self.rotation+=s/10
+        if key[pygame.K_d]: self.rotation -= s / 10
+        if key[pygame.K_a]: self.rotation += s / 10
 
         if key[pygame.K_z]: self.position[2] -= s
         if key[pygame.K_x]: self.position[2] += s
-
-
 
 
 #
@@ -74,7 +72,7 @@ class Mesh:
         self.edges = edges
         self.faces = faces
         self.colors = colors
-        self.type = type # Rendering type: 1 - full, 2 - circles
+        self.type = type  # Rendering type: 1 - full, 2 - circles
         print("Mesh created:", self.name)
 
     def __repr__(self):
@@ -88,71 +86,67 @@ class Mesh:
         return math.sqrt(sumz)
 
     def Scale(self, x, y, z):
-        s_matrix = self.ScaleMatrix = np.array([[x, 0., 0., 0.],
-                      [0., y, 0., 0.],
-                      [0., 0., z, 0.],
-                      [0., 0., 0., 1.]])
+        s_matrix = np.array([[x, 0., 0., 0.],
+                            [0., y, 0., 0.],
+                            [0., 0., z, 0.],
+                            [0., 0., 0., 1.]])
 
         for vert in self.vertices:
             vert.vector = vert.vector.dot(s_matrix)
 
-        return s_matrix;
-
-
+        return s_matrix
 
     def Rotate(self, radiansx, radiansy, radiansz):
 
         rsinx = math.sin(radiansx)
         rcosx = math.cos(radiansx)
 
-        rsiny= math.sin(radiansy)
-        rcosy= math.cos(radiansy)
+        rsiny = math.sin(radiansy)
+        rcosy = math.cos(radiansy)
 
         rsinz = math.sin(radiansz)
         rcosz = math.cos(radiansz)
 
         # Rotation Matrix around X axis
-        rx_matrix = self.RotationXMatrix = np.array([[rcosx, 0., rsinx, 0.],
-                                                [0., 1, 0., 0.],
-                                                [-rsinx, 0., rcosx, 0.],
-                                                [0., 0., 0., 1.]])
+        rx_matrix = np.array([[rcosx, 0., rsinx, 0.],
+                            [0., 1, 0., 0.],
+                            [-rsinx, 0., rcosx, 0.],
+                            [0., 0., 0., 1.]])
         # Rotation Matrix around Y axis
-        ry_matrix = self.RotationYMatrix = np.array([[1, 0., 0, 0.],
-                                                [0., rcosy, -rsiny, 0.],
-                                                [0, rsiny, rcosy, 0.],
-                                                [0., 0., 0., 1.]])
+        ry_matrix = np.array([[1, 0., 0, 0.],
+                            [0., rcosy, -rsiny, 0.],
+                            [0, rsiny, rcosy, 0.],
+                            [0., 0., 0., 1.]])
         # Rotation Matrix around Z axis
-        rz_matrix = self.RotationZMatrix = np.array([[rcosz, -rsinz, 0, 0.],
-                                                     [rsinz, rcosz, 0, 0.],
-                                                     [0, 0, 1, 0.],
-                                                     [0., 0., 0., 1.]])
+        rz_matrix = np.array([[rcosz, -rsinz, 0, 0.],
+                            [rsinz, rcosz, 0, 0.],
+                            [0, 0, 1, 0.],
+                            [0., 0., 0., 1.]])
         for vert in self.vertices:
             vert.vector = vert.vector.dot(rx_matrix.dot(ry_matrix).dot(rz_matrix))
 
-        return rx_matrix;
-
+        return rx_matrix
 
     def Translate(self, x, y, z):
-        t_matrix = self.TranslateMatrix = np.array([[1., 0., 0., x],
-                      [0., 1., 0., y],
-                      [0., 0., 1., z],
-                      [0., 0., 0., 1.]])
+        t_matrix = np.array([[1., 0., 0., x],
+                            [0., 1., 0., y],
+                            [0., 0., 1., z],
+                            [0., 0., 0., 1.]])
 
         for vert in self.vertices:
-             vert.vector = t_matrix.dot(vert.vector)
+            vert.vector = t_matrix.dot(vert.vector)
 
-
-        return t_matrix;
+        return t_matrix
 
     def rotate2d(self, pos, rad):
-        x,y = pos
+        x, y = pos
         s, c = math.sin(rad), math.cos(rad)
-        return x*c - y*s, y*c + x*s
+        return x * c - y * s, y * c + x * s
 
     def Render(self, surface, cam, color):
         # We draw dots
-        calculated=False
-        if(self.type==1):
+        calculated = False
+        if (self.type == 1):
 
             for vert in self.vertices:
 
@@ -166,49 +160,49 @@ class Mesh:
 
                 ex, ey = x * f, y * f
 
-            # TODO: Make it as point counting routine
-                if (int(cam.position[2]) == int(vert.vector[2]) and calculated==False):
-                   #print(int(cam.position[2]), vert.vector[2])
-                   calculated = True
-
+                # TODO: Make it as point counting routine
+                if (int(cam.position[2]) == int(vert.vector[2]) and calculated == False):
+                    # print(int(cam.position[2]), vert.vector[2])
+                    calculated = True
 
                 if (cam.position[2] >= vert.vector[2]):
-                    pygame.draw.circle(surface, color, (int(ex) + int(surface.get_width() / 2), int(ey) + int(surface.get_height() / 2)), 2)
+                    pygame.draw.circle(surface, color, (
+                    int(ex) + int(surface.get_width() / 2), int(ey) + int(surface.get_height() / 2)), 2)
 
         # Or we draw shapes
-        if(self.type==2):
+        if (self.type == 2):
             points = []
 
             for vert in self.vertices:
+                x, y, z = vert.vector[0], vert.vector[1], vert.vector[2]
+                x -= cam.position[0]
+                y -= cam.position[1]
+                z -= cam.position[2]
 
-                x,y,z = vert.vector[0],vert.vector[1],vert.vector[2]
-                x-=cam.position[0]; y-=cam.position[1]; z-=cam.position[2]
-
-                x,y = self.rotate2d((x,y), cam.rotation)
-                f=500/z
+                x, y = self.rotate2d((x, y), cam.rotation)
+                f = 500 / z
 
                 ex, ey = x * f, y * f
                 points += [(int(ex) + int(surface.get_width() / 2), int(ey) + int(surface.get_height() / 2))]
 
-
-            face_list = []; face_color = []; depth = []
+            face_list = []
+            face_color = []
+            depth = []
             for face in self.faces:
-               for i in face:
-                   coords = [points[i] for i in face]
-                   face_list += [coords]
-                   face_color += [self.colors[self.faces.index(face)]]
+                for i in face:
+                    coords = [points[i] for i in face]
+                    face_list += [coords]
+                    face_color += [self.colors[self.faces.index(face)]]
 
             for i in range(len(face_list)):
-                    pygame.draw.polygon(surface, face_color[i], face_list[i])
-
+                pygame.draw.polygon(surface, face_color[i], face_list[i])
 
 
 def RenderAllMeshes(meshes, alt, surface, camera):
-
-    x = int(alt/100)-1
+    x = int(alt / 100) - 1
     for mesh in meshes:
-        if (mesh.name==str(x)):
-            color=(255,0,0)
+        if (mesh.name == str(x)):
+            color = (255, 0, 0)
         else:
-            color=(255,255,0)
+            color = (255, 255, 0)
         mesh.Render(surface, camera, color)

@@ -4,7 +4,6 @@
 
 import pygame
 import numpy as np
-from pygame.locals import *
 import sys
 import engine3d
 import os
@@ -12,7 +11,7 @@ import osd
 import copy
 import player
 import random
-import math
+
 
 
 class Game:
@@ -30,7 +29,6 @@ class Game:
         print("Generating Circles...")
 
         for i in range(amount):
-
             # Max horizontal distance is 50
             randx = random.randint(-25, 25)
             randy = random.randint(-25, 25)
@@ -51,20 +49,20 @@ class Game:
             cir.Scale(radius, radius, 1.)
             cir2.Scale(radius, radius, 1.)
             cir2.Rotate(0, 0, .785)
-            cir.Translate(randx, randy, (i+1)*100) # adding 1 to i, to make sure we are not starting generation from 0 meters
-            cir2.Translate(randx, randy, (i+1)*100)
-
+            cir.Translate(randx, randy,
+                          (i + 1) * 100)  # adding 1 to i, to make sure we are not starting generation from 0 meters
+            cir2.Translate(randx, randy, (i + 1) * 100)
 
             meshes_list.append(cir)
             meshes_list.append(cir2)
 
     def run(self):
         clock = pygame.time.Clock()
-        alt = 800 # Initial altitude
-        Landed = 0 # Have we landed?
+        alt = 800  # Initial altitude
+        Landed = 0  # Have we landed?
 
         while (Landed < 1):
-            alt-=.19 # Falling speed
+            alt -= .19  # Falling speed
 
             dt = clock.tick(60)
             for event in pygame.event.get():
@@ -77,7 +75,7 @@ class Game:
             self.surface.fill((153, 204, 255))
 
             # we are falling
-            c.position[2]=alt
+            c.position[2] = alt
 
             # Render Meshes
             engine3d.RenderAllMeshes(all_meshes, alt, self.surface, c)
@@ -87,20 +85,21 @@ class Game:
             c.update(dt, key)
 
             # Draw shadow on certain altitude
-            if (c.position[2]<60):
-                pygame.draw.circle(self.surface, (100, 100, 100), (int(self.w/2), 525-int(50/c.position[2])*5-34), int(120 / c.position[2]))
+            if (c.position[2] < 60):
+                pygame.draw.circle(self.surface, (100, 100, 100),
+                                   (int(self.w / 2), 525 - int(50 / c.position[2]) * 5 - 34), int(120 / c.position[2]))
 
             # Draw player sprite
             sprite_group.update(dt)
             sprite_group.draw(self.surface)
 
             # render OSD texts, etc
-            if (alt>100):
-                on_screen_display.update("Altitude: "+ str(int(c.position[2])) + " m.")
-            elif (alt<100 and alt >2):
+            if (alt > 100):
+                on_screen_display.update("Altitude: " + str(int(c.position[2])) + " m.")
+            elif (alt < 100 and alt > 2):
                 on_screen_display.update("Altitude: " + str(int(c.position[2])) + " m. OPEN PARACHUTE!!!")
 
-            elif(alt<2):
+            elif (alt < 2):
                 on_screen_display.update("YOU ARE DEAD BABY!")
             on_screen_display.render(self.surface, (0, 0, 0))
 
@@ -108,15 +107,15 @@ class Game:
             self.screen.blit(self.surface, (0, 0))
             pygame.display.update()
 
-            if (alt<2): Landed=1
+            if (alt < 2): Landed = 1
         pygame.time.wait(5000)
+
 
 def getz(mesh):
     return mesh.Getz()
 
+
 if __name__ == "__main__":
-
-
     pygame.init()
 
     # Scene mesh list
@@ -126,9 +125,9 @@ if __name__ == "__main__":
     c = engine3d.Camera((0.0, 0.0, 400.0), 0.4)
 
     # Since we have no 3d models - we make our models by hand...
-    planeedges = np.array([[0,1], [1,2], [2,3], [3,0]])
-    planefaces = (0,1,2),(0,3,2)
-    planecolors = (51, 204, 51),(51, 204, 51)
+    planeedges = np.array([[0, 1], [1, 2], [2, 3], [3, 0]])
+    planefaces = (0, 1, 2), (0, 3, 2)
+    planecolors = (51, 204, 51), (51, 204, 51)
 
     plane = engine3d.Mesh("Ziemia", 4, planeedges, planefaces, planecolors, 2)
 
@@ -137,7 +136,7 @@ if __name__ == "__main__":
     plane.vertices[2] = engine3d.Vector4(2.1, 5.0, 0, 0.0)
     plane.vertices[3] = engine3d.Vector4(2.1, -3.3, 0, 0.0)
 
-    roadedges=np.array([[0,1], [1,2], [2,3], [3,0]])
+    roadedges = np.array([[0, 1], [1, 2], [2, 3], [3, 0]])
     roadfaces = (0, 1, 2), (0, 3, 2)
     roadcolors = (200, 200, 200), (200, 200, 200)
 
@@ -153,14 +152,14 @@ if __name__ == "__main__":
     # Initial scale mesh
 
     plane.Scale(60., 50., 1.)
-    road.Scale(30,4,1)
-    road2.Scale(55,4,1)
+    road.Scale(30, 4, 1)
+    road2.Scale(55, 4, 1)
 
     # And Rotation
-    road2.Rotate(0,0,.8)
+    road2.Rotate(0, 0, .8)
 
     # On screen text
-    on_screen_display = osd.osd()
+    on_screen_display = osd.Osd()
 
     # We are adding to out mesh list
 
@@ -168,10 +167,9 @@ if __name__ == "__main__":
     all_meshes.append(road)
     all_meshes.append(road2)
 
-
     g = Game()
 
-    # Let's generate some circles to dall through
+    # Let's generate some circles to fall through
     g.GenerateCircles(all_meshes, 1, 5)
 
     # Sort meshes by average Z-index

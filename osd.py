@@ -1,6 +1,7 @@
 import pygame
 
-class osd:
+
+class Osd:
     def __init__(self):
         self.font = pygame.font.SysFont("comicsansms", 20)
         self.text = ""
@@ -9,6 +10,5 @@ class osd:
         self.text = text
 
     def render(self, surface, color):
-
         scoretext = self.font.render(self.text, 1, color)
         surface.blit(scoretext, (20, 20))
