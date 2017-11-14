@@ -58,10 +58,6 @@ class Camera:
         if key[pygame.K_d]: self.rotation -= s / 10
         if key[pygame.K_a]: self.rotation += s / 10
 
-        if key[pygame.K_z]: self.position[2] -= s
-        if key[pygame.K_x]: self.position[2] += s
-
-
 #
 #   Class is defining shape (mesh). Takes name and vertices count as input.
 #

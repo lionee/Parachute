@@ -17,10 +17,16 @@ class Player(pygame.sprite.Sprite):
         self.image = self.images[self.index]
         self.rect = pygame.Rect(positionx, positiony, 104, 108)
         self.points = 0
+        self.vrot=0
 
-    def update(self, dt):
+    def update(self, dt, key):
 
         self.current_time += dt
+
+        if key[pygame.K_w]: self.vrot += 2
+        if key[pygame.K_s]: self.vrot -= 2
+
+
         if self.current_time >= self.animation_time:
             self.current_time = 0
             self.index += 1

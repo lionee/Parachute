@@ -89,12 +89,12 @@ class Game:
                                    (int(self.w / 2), 525 - int(50 / c.position[2]) * 5 - 34), int(120 / c.position[2]))
 
             # Draw player sprite
-            sprite_group.update(dt)
+            sprite_group.update(dt, key)
             sprite_group.draw(self.surface)
 
             # render OSD texts, etc
             if (alt > 100):
-                on_screen_display.update("Altitude: " + str(int(c.position[2])) + " m.")
+                on_screen_display.update("Altitude: " + str(int(c.position[2])) + " m. " + str(player.vrot))
             elif (alt < 100 and alt > 2):
                 on_screen_display.update("Altitude: " + str(int(c.position[2])) + " m. OPEN PARACHUTE!!!")
 
@@ -107,7 +107,7 @@ class Game:
             pygame.display.update()
 
             if (alt < 2): Landed = 1
-        
+
 
 
 def getz(mesh):
