@@ -24,7 +24,7 @@ class Vector4:
         return self.vector[1]
 
     def retz(self):
-        return self.vector[2]
+        return int(self.vector[2])
 
     def retw(self):
         return self.vector[3]
@@ -77,6 +77,15 @@ class Mesh:
         self.type = type # Rendering type: 1 - full, 2 - circles
         print("Mesh created:", self.name)
 
+    def __repr__(self):
+        return self.name
+
+    def Getz(self):
+        sumz = 0
+        for vertex in self.vertices:
+            sumz += vertex.retz()
+        print(math.sqrt(sumz))
+        return math.sqrt(sumz)
 
     def Scale(self, x, y, z):
         s_matrix = self.ScaleMatrix = np.array([[x, 0., 0., 0.],
@@ -188,10 +197,6 @@ class Mesh:
                    coords = [points[i] for i in face]
                    face_list += [coords]
                    face_color += [self.colors[self.faces.index(face)]]
-
-
-
-            #order = sorted(range(len(face_list)), key=lambda i:depth[i], reverse=1)
 
             for i in range(len(face_list)):
                     pygame.draw.polygon(surface, face_color[i], face_list[i])

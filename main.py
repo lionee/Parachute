@@ -12,6 +12,7 @@ import osd
 import copy
 import player
 import random
+import math
 
 
 class Game:
@@ -110,6 +111,9 @@ class Game:
             if (alt<2): Landed=1
         pygame.time.wait(5000)
 
+def getz(mesh):
+    return mesh.Getz()
+
 if __name__ == "__main__":
 
 
@@ -128,10 +132,10 @@ if __name__ == "__main__":
 
     plane = engine3d.Mesh("Ziemia", 4, planeedges, planefaces, planecolors, 2)
 
-    plane.vertices[0] = engine3d.Vector4(-3.0, -3.3, 1, 0.0)
-    plane.vertices[1] = engine3d.Vector4(-4.2, 2.6, 1, 0.0)
-    plane.vertices[2] = engine3d.Vector4(2.1, 5.0, 1, 0.0)
-    plane.vertices[3] = engine3d.Vector4(2.1, -3.3, 1, 0.0)
+    plane.vertices[0] = engine3d.Vector4(-3.0, -3.3, 0, 0.0)
+    plane.vertices[1] = engine3d.Vector4(-4.2, 2.6, 0, 0.0)
+    plane.vertices[2] = engine3d.Vector4(2.1, 5.0, 0, 0.0)
+    plane.vertices[3] = engine3d.Vector4(2.1, -3.3, 0, 0.0)
 
     roadedges=np.array([[0,1], [1,2], [2,3], [3,0]])
     roadfaces = (0, 1, 2), (0, 3, 2)
@@ -139,18 +143,18 @@ if __name__ == "__main__":
 
     road = engine3d.Mesh("Droga", 4, roadedges, roadfaces, roadcolors, 2)
 
-    road.vertices[0] = engine3d.Vector4(-1, -1, 2, 0.0)
-    road.vertices[1] = engine3d.Vector4(-1, 1, 2, 0.0)
-    road.vertices[2] = engine3d.Vector4(1, 1, 2, 0.0)
-    road.vertices[3] = engine3d.Vector4(1, -1, 2, 0.0)
+    road.vertices[0] = engine3d.Vector4(-1, -1, 0, 0.0)
+    road.vertices[1] = engine3d.Vector4(-1, 1, 0, 0.0)
+    road.vertices[2] = engine3d.Vector4(1, 1, 0, 0.0)
+    road.vertices[3] = engine3d.Vector4(1, -1, 0, 0.0)
 
     road2 = copy.deepcopy(road)
 
     # Initial scale mesh
 
-    plane.Scale(60., 50., 0.)
-    road.Scale(30,4,0)
-    road2.Scale(55,4,0)
+    plane.Scale(60., 50., 1.)
+    road.Scale(30,4,1)
+    road2.Scale(55,4,1)
 
     # And Rotation
     road2.Rotate(0,0,.8)
@@ -159,15 +163,20 @@ if __name__ == "__main__":
     on_screen_display = osd.osd()
 
     # We are adding to out mesh list
-    # TODO: sort meshes by Z axis to ensure right rendering
+
     all_meshes.append(plane)
     all_meshes.append(road)
     all_meshes.append(road2)
+
 
     g = Game()
 
     # Let's generate some circles to dall through
     g.GenerateCircles(all_meshes, 1, 5)
+
+    # Sort meshes by average Z-index
+    all_meshes = sorted(all_meshes, key=getz)
+    print(all_meshes)
 
     player = player.Player(g.w / 2 - 108 / 2, g.h / 2 - 104 / 2)
     sprite_group = pygame.sprite.Group(player)
