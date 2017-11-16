@@ -31,6 +31,7 @@ class Player(pygame.sprite.Sprite):
         if (key[pygame.K_s] and self.vrot>=-90):
             self.vrot -= 2
 
+        print(self.vrot/100)
         if self.current_time >= self.animation_time:
             self.current_time = 0
             self.index += 1

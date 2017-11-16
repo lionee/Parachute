@@ -162,7 +162,11 @@ class Mesh:
                     calculated = True
 
                 if (cam.position[2] >= vert.vector[2]):
-                    pygame.draw.circle(surface, color, (int(ex) + int(surface.get_width() / 2), int(ey) + int(surface.get_height() / 2)), 2)
+                    try:
+
+                        pygame.draw.circle(surface, color, (int(ex) + int(surface.get_width() / 2), int(ey) + int(surface.get_height() / 2)), int(2/(cam.position[2]-vert.vector[2])*40))
+                    except:
+                        pass
 
         vert_list = []
         # Or we draw shapes
@@ -198,14 +202,14 @@ class Mesh:
 
             for i in order:
                 if(cam.position[2]>vert.vector[2]):
-                    pygame.draw.polygon(surface, face_color[i], face_list[i])
+                    try:
+                        pygame.draw.polygon(surface, face_color[i], face_list[i])
+                    except:
+                        pass
 
 
 def RenderAllMeshes(meshes, alt, surface, camera):
-    x = int(alt / 100) - 1
+
+    color = (255, 255, 0)
     for mesh in meshes:
-        if (mesh.name == str(x)):
-            color = (255, 0, 0)
-        else:
-            color = (255, 255, 0)
         mesh.Render(surface, camera, color)
