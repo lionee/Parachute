@@ -52,7 +52,6 @@ class Camera:
         if(vrot<0):
             self.position[0] -= x; self.position[1] -= y
 
-
         if key[pygame.K_d]:
             self.rotation -= 0.15 / 10
         if key[pygame.K_a]:

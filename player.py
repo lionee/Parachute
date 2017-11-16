@@ -31,11 +31,19 @@ class Player(pygame.sprite.Sprite):
         if (key[pygame.K_s] and self.vrot>=-90):
             self.vrot -= 2
 
-        print(self.vrot/100)
+        if (self.fallspeed > 0.30): self.fallspeed = 0.30
+        if (self.fallspeed < 0.15): self.fallspeed = 0.15
+
+        if (self.fallspeed <= 0.30 and self.fallspeed >= 0.15):
+            self.fallspeed+=self.vrot/10000
+
+
+
+        print(self.fallspeed, self.vrot/10000)
         if self.current_time >= self.animation_time:
             self.current_time = 0
             self.index += 1
             if self.index >= len(self.images):
                     self.index = 0
             self.image = self.images[self.index]
-        return int(self.vrot)
+

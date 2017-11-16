@@ -30,8 +30,8 @@ class Game:
 
         for i in range(amount):
             # Max horizontal distance is 30
-            randx = random.randint(-35, 35)
-            randy = random.randint(-35, 35)
+            randx = random.randint(-15, 15)
+            randy = random.randint(-15, 15)
 
             circleedges = np.array([[0, 1], [1, 2], [2, 3], [3, 0]])
             circlefaces = (0, 1, 2), (0, 3, 2)
