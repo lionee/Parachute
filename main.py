@@ -29,9 +29,9 @@ class Game:
         print("Generating Circles...")
 
         for i in range(amount):
-            # Max horizontal distance is 50
-            randx = random.randint(-25, 25)
-            randy = random.randint(-25, 25)
+            # Max horizontal distance is 30
+            randx = random.randint(-15, 15)
+            randy = random.randint(-15, 15)
 
             circleedges = np.array([[0, 1], [1, 2], [2, 3], [3, 0]])
             circlefaces = (0, 1, 2), (0, 3, 2)
@@ -57,7 +57,7 @@ class Game:
 
     def run(self, player):
         clock = pygame.time.Clock()
-        alt = 800  # Initial altitude
+        alt = 200  # Initial altitude
 
         Landed = 0  # Have we landed?
         p = player
@@ -193,7 +193,7 @@ if __name__ == "__main__":
     g = Game()
 
     # Let's generate some circles to fall through
-    g.GenerateCircles(all_meshes, 1, 3,200)
+    g.GenerateCircles(all_meshes, 1, 3,100)
 
     # Sort meshes by average Z-index
     all_meshes = sorted(all_meshes, key=getz)
