@@ -42,7 +42,7 @@ class Camera:
 
     def update(self, dt, key, vrot):
 
-        s = dt / 1000 * abs(vrot)
+        s = dt / 1000 * abs(vrot)*1.8
         x, y = s * math.sin(self.rotation), s * math.cos(self.rotation)
 
 
