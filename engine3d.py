@@ -1,7 +1,7 @@
 # Engine is capable of rendering not only flat objects used in this game.
 # It can render any 3d object.
 #
-# TODO: z-buffering, loading objects from Blender exports.
+# TODO: loading objects from Blender exports.
 #
 #
 
@@ -29,12 +29,6 @@ class Vector4:
     def retw(self):
         return self.vector[3]
 
-    def print_vertex4(self):
-        print(self.vector)
-
-    def get_nparray(self):
-        return self.vector
-
 
 #
 #   Class is defining camera object
@@ -46,17 +40,23 @@ class Camera:
         self.position = list(position)
         self.rotation = radian
 
-    def update(self, dt, key):
+    def update(self, dt, key, vrot):
 
-        s = dt / 1000 * 10
-
+        s = dt / 1000 * abs(vrot)
         x, y = s * math.sin(self.rotation), s * math.cos(self.rotation)
 
-        if key[pygame.K_w]: self.position[0] += x; self.position[1] += y
-        if key[pygame.K_s]: self.position[0] -= x; self.position[1] -= y
 
-        if key[pygame.K_d]: self.rotation -= s / 10
-        if key[pygame.K_a]: self.rotation += s / 10
+        if(vrot>0):
+            self.position[0] += x; self.position[1] += y
+
+        if(vrot<0):
+            self.position[0] -= x; self.position[1] -= y
+
+
+        if key[pygame.K_d]:
+            self.rotation -= 0.15 / 10
+        if key[pygame.K_a]:
+            self.rotation += 0.15 / 10
 
 #
 #   Class is defining shape (mesh). Takes name and vertices count as input.
@@ -185,6 +185,7 @@ class Mesh:
             face_list = []
             face_color = []
             depth = []
+
             for f in range(len(self.faces)):
                 face = self.faces[f]
                 for i in face:

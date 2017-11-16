@@ -25,7 +25,7 @@ class Game:
         self.surface = pygame.Surface((self.w, self.h))
         self.surface.fill((153, 204, 255))
 
-    def GenerateCircles(self, meshes_list, radius, amount):
+    def GenerateCircles(self, meshes_list, radius, amount, vdistance):
         print("Generating Circles...")
 
         for i in range(amount):
@@ -49,19 +49,22 @@ class Game:
             cir.Scale(radius, radius, 1.)
             cir2.Scale(radius, radius, 1.)
             cir2.Rotate(0, 0, .785)
-            cir.Translate(randx, randy, (i + 1) * 100)  # adding 1 to i, to make sure we are not starting generation from 0 meters
-            cir2.Translate(randx, randy, (i + 1) * 100)
+            cir.Translate(randx, randy, (i + 1) * vdistance)  # adding 1 to i, to make sure we are not starting generation from 0 meters
+            cir2.Translate(randx, randy, (i + 1) * vdistance)
 
             meshes_list.append(cir)
             meshes_list.append(cir2)
 
-    def run(self):
+    def run(self, player):
         clock = pygame.time.Clock()
         alt = 800  # Initial altitude
-        Landed = 0  # Have we landed?
 
+        Landed = 0  # Have we landed?
+        p = player
         while (Landed < 1):
-            alt -= .19  # Falling speed
+
+            print(p.fallspeed)
+            alt -= p.fallspeed  # Falling speed
 
             dt = clock.tick(60)
             for event in pygame.event.get():
@@ -81,7 +84,7 @@ class Game:
 
             # Keyboard handling
             key = pygame.key.get_pressed()
-            c.update(dt, key)
+            c.update(dt, key, player.vrot/32)
 
             # Draw shadow on certain altitude
             if (c.position[2] < 60):
@@ -94,7 +97,7 @@ class Game:
 
             # render OSD texts, etc
             if (alt > 100):
-                on_screen_display.update("Altitude: " + str(int(c.position[2])) + " m. " + str(player.vrot))
+                on_screen_display.update("Altitude: " + str(int(c.position[2])) + " m. " + str(int(player.vrot/32)))
             elif (alt < 100 and alt > 2):
                 on_screen_display.update("Altitude: " + str(int(c.position[2])) + " m. OPEN PARACHUTE!!!")
 
@@ -190,14 +193,14 @@ if __name__ == "__main__":
     g = Game()
 
     # Let's generate some circles to fall through
-    g.GenerateCircles(all_meshes, 1, 5)
+    g.GenerateCircles(all_meshes, 1, 3,200)
 
     # Sort meshes by average Z-index
     all_meshes = sorted(all_meshes, key=getz)
-    print(all_meshes)
 
     player = player.Player(g.w / 2 - 108 / 2, g.h / 2 - 104 / 2)
+
     sprite_group = pygame.sprite.Group(player)
-    g.run()
+    g.run(player)
 
     print("Game Over")
