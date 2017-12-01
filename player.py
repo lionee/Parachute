@@ -34,7 +34,7 @@ class Player(pygame.sprite.Sprite):
         self.rect = pygame.Rect(positionx, positiony, 104, 108)
         self.points = 0
         self.fallspeed = 0.17
-        self.vrot=0
+        self.vrot=90
 
     def update(self, dt, key):
 
@@ -83,4 +83,4 @@ class Player(pygame.sprite.Sprite):
 
             else:
                 pass
-            
+

@@ -3,7 +3,7 @@ import pygame
 
 class Osd:
     def __init__(self):
-        self.font = pygame.font.SysFont("comicsansms", 20)
+        self.font = pygame.font.SysFont("arial", 20)
         self.text = ""
 
     def update(self, text):
