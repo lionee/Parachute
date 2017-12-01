@@ -52,6 +52,8 @@ class Player(pygame.sprite.Sprite):
         if (self.fallspeed <= 0.30 and self.fallspeed >= 0.15):
             self.fallspeed=0.17 + abs(self.vrot/700)
 
+        self.fallspeed = 0.05/self.fallspeed
+
         if self.current_time >= self.animation_time:
             self.current_time = 0
             self.index += 1
@@ -59,6 +61,9 @@ class Player(pygame.sprite.Sprite):
             if self.index >= len(self.images):
                     self.index = 0
 
+
+            # Sprite switiching depending on vertical rotation
+            # TODO: add more sprites to get better immersion
 
             if (self.vrot/1000 > 0.07):
                 self.image = self.images[self.index]
@@ -78,4 +83,4 @@ class Player(pygame.sprite.Sprite):
 
             else:
                 pass
-            print(100/self.fallspeed)
+            

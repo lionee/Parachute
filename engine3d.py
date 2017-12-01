@@ -42,6 +42,8 @@ class Camera:
         self.speed = 0
     def update(self, dt, key, vrot):
 
+
+        # horizontal moving speed
         self.speed = math.sin(math.radians(vrot*2))
 
 
