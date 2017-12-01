@@ -21,7 +21,7 @@ class Game:
         self.screen = pygame.display.set_mode((self.w, self.h))
         os.environ['SDL_VIDEO_CENTERED'] = '1'
         pygame.display.set_caption("Parachute Game")
-        print("Display initialized")
+        ("Display initialized")
         self.surface = pygame.Surface((self.w, self.h))
         self.surface.fill((153, 204, 255))
 
@@ -63,7 +63,7 @@ class Game:
         p = player
         while (Landed < 1):
 
-            print(p.fallspeed)
+
             alt -= p.fallspeed  # Falling speed
 
             dt = clock.tick(60)
@@ -84,7 +84,7 @@ class Game:
 
             # Keyboard handling
             key = pygame.key.get_pressed()
-            c.update(dt, key, player.vrot/32)
+            c.update(dt, key, player.vrot)
 
             # Draw shadow on certain altitude
             if (c.position[2] < 60):
@@ -97,7 +97,7 @@ class Game:
 
             # render OSD texts, etc
             if (alt > 100):
-                on_screen_display.update("Altitude: " + str(int(c.position[2])) + " m. " + str(int(player.vrot/32)))
+                on_screen_display.update("Altitude: " + str(int(c.position[2])) + " m. " + " " + str(player.vrot))
             elif (alt < 100 and alt > 2):
                 on_screen_display.update("Altitude: " + str(int(c.position[2])) + " m. OPEN PARACHUTE!!!")
 

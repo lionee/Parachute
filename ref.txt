@@ -20,3 +20,9 @@ https://www.youtube.com/watch?v=g4E9iq0BixA
     cube.vertices[5] = engine3d.Vector4(1.0, -1.0, 1.0, 0.0)
     cube.vertices[6] = engine3d.Vector4(1.0, 1.0, 1.0, 0.0)
     cube.vertices[7] = engine3d.Vector4(-1.0, 1.0, 1.0, 0.0)
+
+
+ -90 ---45--- 0 --45--- 90 angle
+
+  0   -max    0   max   0  speed
+

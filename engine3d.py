@@ -39,18 +39,22 @@ class Camera:
         # Camera position and rotation in space
         self.position = list(position)
         self.rotation = radian
-
+        self.speed = 0
     def update(self, dt, key, vrot):
 
-        s = dt / 1000 * abs(vrot)*1.8
+        self.speed = math.sin(math.radians(vrot*2))
+
+
+        s = dt / 10000 * abs(vrot)*1.8
         x, y = s * math.sin(self.rotation), s * math.cos(self.rotation)
 
 
         if(vrot>0):
-            self.position[0] += x; self.position[1] += y
+            self.position[0] += x*self.speed; self.position[1] += y*self.speed
 
         if(vrot<0):
-            self.position[0] -= x; self.position[1] -= y
+            self.position[0] -= x*(-self.speed); self.position[1] -= y*(-self.speed)
+
 
         if key[pygame.K_d]:
             self.rotation -= 0.15 / 10
