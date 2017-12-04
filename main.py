@@ -97,7 +97,7 @@ class Game:
 
             # render OSD texts, etc
             if (alt > 100):
-                on_screen_display.update("Altitude: " + str(int(c.position[2])) + " m. " + " " + str(player.vrot))
+                on_screen_display.update("Altitude: " + str(int(c.position[2])) + " m. ")
             elif (alt < 100 and alt > 2):
                 on_screen_display.update("Altitude: " + str(int(c.position[2])) + " m. OPEN PARACHUTE!!!")
 
@@ -109,6 +109,9 @@ class Game:
             self.screen.blit(self.surface, (0, 0))
             pygame.display.update()
 
+            # Update FPS counter on window title
+            fps = clock.get_fps()
+            pygame.display.set_caption("Parachute Game FPS: "+str(int(fps)))
             if (alt < 2): Landed = 1
 
 
