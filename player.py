@@ -27,6 +27,7 @@ class Player(pygame.sprite.Sprite):
         self.images5.append(load_image('assets/skydiver9.png'))
         self.images5.append(load_image('assets/skydiver10.png'))
 
+        self.parachute = False
         self.animation_time = 50
         self.current_time = 0
         self.index = 0
