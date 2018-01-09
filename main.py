@@ -189,7 +189,7 @@ if __name__ == "__main__":
     all_meshes.append(road)
     all_meshes.append(road2)
     all_meshes.append(cube)
-
+    # create game instance
     g = Game()
 
     # Let's generate some circles to fall through
